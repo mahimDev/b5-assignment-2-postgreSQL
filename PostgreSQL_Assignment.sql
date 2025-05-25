@@ -83,3 +83,31 @@ SELECT s.common_name FROM species s
 LEFT JOIN sightings si ON s.species_id = si.species_id
 WHERE si.sighting_id IS NULL;
 
+--pb-6
+SELECT sp.common_name, si.sighting_time, r.name
+FROM sightings si
+JOIN species sp ON si.species_id = sp.species_id
+JOIN rangers r ON si.ranger_id = r.ranger_id
+ORDER BY si.sighting_time DESC
+LIMIT 2;
+
+--pb-7
+UPDATE species
+SET conservation_status = 'Historic'
+WHERE discovery_date < '1800-01-01';
+
+--pb-8
+SELECT sighting_id,
+    CASE
+        WHEN EXTRACT(HOUR FROM sighting_time) < 12 THEN 'Morning'
+        WHEN EXTRACT(HOUR FROM sighting_time) BETWEEN 12 AND 17 THEN 'Afternoon'
+        ELSE 'Evening'
+    END AS time_of_day
+FROM sightings;
+
+--pb-9
+
+DELETE FROM rangers
+WHERE ranger_id NOT IN (
+    SELECT DISTINCT ranger_id FROM sightings
+);
